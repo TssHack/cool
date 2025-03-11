@@ -56,7 +56,6 @@ async function handleMessage(msg) {
     if (text === "/start") {
         return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
-            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
             [{ text: "بازوی صراط", url: "https://ble.ir/seratbot" }],
             [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" }]
         ]);
@@ -95,7 +94,6 @@ async function handleCallbackQuery(query) {
     if (data === "main_menu") {
         return editMessage(chatId, messageId, "**کد رهگیری خود را ارسال کنید**", [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
-            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
             [{ text: "بازوی صراط", url: "https://ble.ir/seratbot" }],
             [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" }]
         ]);

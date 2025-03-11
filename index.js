@@ -139,11 +139,11 @@ async function trackPackage(chatId, trackingCode) {
         parcelInfo += `📤 **فرستنده:** ${sender.name || "نامشخص"} از ${sender.city || "نامشخص"}\n`;
         parcelInfo += `📥 **گیرنده:** ${receiver.name || "نامشخص"} در ${receiver.city || "نامشخص"}\n`;
         parcelInfo += `🚚 **وزن:** ${results.weight || "نامشخص"} کیلوگرم\n`;
-        parcelinfo += `📦 **نوع بسته:** {results.get('COD', 'نامشخص')}\n`;
+         parcelInfo += `📦 **نوع بسته:** ${results.COD || "نامشخص"}\n`;
         parcelInfo += `💸 **هزینه کل:** ${results.total_cost || "نامشخص"} تومان\n`;
         parcelInfo += `🔄 **وضعیت پرداخت:** ${results.pay_type || "نامشخص"}\n`;
-        parcelinfo += `🌍 **مسافت:** {results.get('city_distance', 'نامشخص')} کیلومتر\n`;
-        parcelinfo += `📍 **زون:** {results.get('distance_zone', 'نامشخص')}\n`;
+        parcelInfo += `🌍 **مسافت:** ${results.city_distance || "نامشخص"} کیلومتر\n`;
+        parcelInfo += `📍 **زون:** ${results.distance_zone || "نامشخص"}\n`;
         
 
         if (statusInfo.length > 0) {

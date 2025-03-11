@@ -1,4 +1,3 @@
-[a1101326@baldr cool]$ cat users.json
 {
   "360977394": {
     "joinedAt": 1741688292106,
@@ -16,4 +15,4 @@
     "joinedAt": 1741688290171,
     "waiting_for_feedback": true
   }
-}[a1101326@baldr cool]$
+}

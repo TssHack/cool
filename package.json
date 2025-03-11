@@ -1,0 +1,21 @@
+{
+  "name": "bale-tipax-bot",
+  "version": "1.0.0",
+  "description": "A bot to track Tipax packages via Bale API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "bale",
+    "tipax",
+    "tracking",
+    "bot",
+    "nodejs"
+  ],
+  "author": "ehsan",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.0",
+  }
+}

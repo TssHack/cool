@@ -57,14 +57,12 @@ async function handleMessage(msg) {
     }
 
     if (text === "/start") {
-        return sendMessage(chatId, 'سلام! 👋\nکد رهگیری تیپاکس را ارسال کنید.', [
+        return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
-            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }]
+            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
+            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }]
+            [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" ]}
         ]);
-    }
-
-    if (!/^\d{21}$/.test(text)) {
-        return sendMessage(chatId, "🚨 **کد رهگیری نامعتبر است!**\nکد رهگیری باید **۲۱ رقم** باشد.");
     }
 
     return trackPackage(chatId, text);
@@ -93,49 +91,69 @@ async function handleCallbackQuery(query) {
     }
 
     if (data === "main_menu") {
-        return editMessage(chatId, messageId, "🏠 **بازگشت به منوی اصلی**", [
+        return editMessage(chatId, messageId, "**کد رهگیری خود را ارسال کنید**", [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
-            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }]
+            [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
+            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }]
+            [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" ]}
         ]);
     }
 }
 
 // رهگیری مرسوله
-async function trackPackage(chatId, trackingCode) {
+// تابع رهگیری مرسوله
+async function trackParcel(chatId, trackingCode, messageId) {
+    if (!/^\d{21}$/.test(trackingCode)) {
+        return editMessage(chatId, messageId, "❌ **کد رهگیری باید ۲۱ رقمی و عددی باشد.**");
+    }
+
     const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**");
 
     try {
         const response = await axios.get(`${TIPAX_API}${trackingCode}`);
-        if (!response.data.status) {
-            return editMessage(chatId, pleaseWait.message_id, "🚨 **کد رهگیری یافت نشد. لطفاً دوباره تلاش کنید.**");
+
+        if (response.status !== 200) {
+            return editMessage(chatId, pleaseWait.message_id, "❌ **خطا در اتصال به سرور. لطفاً دوباره تلاش کنید.**");
         }
 
-        const packageInfo = response.data.results;
-        const statusInfo = packageInfo.status_info
-            .map(status => `📅 ${status.date} - **${status.status}**`)
-            .join("\n");
+        const data = response.data;
 
-        const lastUpdate = packageInfo.status_info.length > 0 
-            ? packageInfo.status_info[packageInfo.status_info.length - 1].date 
-            : "نامشخص";
+        if (!data.status || !data.results) {
+            return editMessage(chatId, pleaseWait.message_id, "🔮 **اطلاعات مرسوله پیدا نشد.**");
+        }
 
-        const message = `
-📦 **اطلاعات مرسوله:**
-**فرستنده:** ${packageInfo.sender.name}
-**گیرنده:** ${packageInfo.receiver.name}
-⚖️ وزن: ${packageInfo.weight} کیلوگرم
-💰 هزینه: ${packageInfo.total_cost} ریال
-📝 **وضعیت مرسوله:**
-${statusInfo}
+        const results = data.results;
+        const sender = results.sender || {};
+        const receiver = results.receiver || {};
+        const statusInfo = results.status_info || [];
 
-🕒 **آخرین بروزرسانی:** ${lastUpdate}
-        `;
+        let parcelInfo = `📦 **اطلاعات مرسوله:**\n`;
+        parcelInfo += `📤 **فرستنده:** ${sender.name || "نامشخص"} از ${sender.city || "نامشخص"}\n`;
+        parcelInfo += `📥 **گیرنده:** ${receiver.name || "نامشخص"} در ${receiver.city || "نامشخص"}\n`;
+        parcelInfo += `💰 **هزینه پست:** ${results.package_cost || "نامشخص"} تومان\n`;
+        parcelInfo += `🚚 **وزن:** ${results.weight || "نامشخص"} کیلوگرم\n`;
+        parcelInfo += `💸 **هزینه کل:** ${results.total_cost || "نامشخص"} تومان\n`;
+        parcelInfo += `🔄 **وضعیت پرداخت:** ${results.pay_type || "نامشخص"}\n`;
 
-        return editMessage(chatId, pleaseWait.message_id, message, [
+        if (statusInfo.length > 0) {
+            parcelInfo += `\n📝 **وضعیت مرسوله:**\n`;
+            statusInfo.forEach(status => {
+                parcelInfo += `📅 **تاریخ:** ${status.date || "نامشخص"}\n`;
+                parcelInfo += `🔹 **وضعیت:** ${status.status || "نامشخص"}\n`;
+                parcelInfo += `📍 **محل:** ${status.representation || "نامشخص"}\n\n`;
+            });
+        } else {
+            parcelInfo += `\n🔮 **وضعیت مرسوله در دسترس نیست.**\n`;
+        }
+
+        const lastUpdate = new Date().toLocaleString("fa-IR");
+        parcelInfo += `\n🕰 **آخرین بروزرسانی:** ${lastUpdate}`;
+
+        return editMessage(chatId, pleaseWait.message_id, parcelInfo, [
             [{ text: "🔙 بازگشت به منو اصلی", callback_data: "main_menu" }]
         ]);
+
     } catch (error) {
-        console.error("⚠️ خطا در دریافت اطلاعات تیپاکس:", error.message);
         return editMessage(chatId, pleaseWait.message_id, "❌ **خطا در دریافت اطلاعات. لطفاً بعداً تلاش کنید.**");
     }
 }

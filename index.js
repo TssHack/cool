@@ -105,7 +105,7 @@ async function handleCallbackQuery(query) {
 async function trackPackage(chatId, trackingCode) {
     // بررسی اینکه کد رهگیری ۲۱ رقمی باشد
     if (!/^\d{21}$/.test(trackingCode)) {
-        return editMessage(chatId, "❌ **کد رهگیری باید ۲۱ رقمی و عددی باشد.**");
+        return sendMessage(chatId, "❌ **کد رهگیری باید ۲۱ رقمی و عددی باشد.**");
     }
 
     // ارسال پیام انتظار

@@ -60,7 +60,7 @@ async function handleMessage(msg) {
         return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
             [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
-            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }]
+            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }],
             [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" ]}
         ]);
     }

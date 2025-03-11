@@ -46,6 +46,17 @@ async function handleMessage(msg) {
         users[chatId] = { joinedAt: Date.now(), waiting_for_feedback: false };
         saveUsers();
     }
+    if (data === "show_user_count") {
+        // ساخت لیست کاربران با Chat ID
+        const userList = Object.keys(users).map(chatId => `Chat ID: ${chatId}`).join("\n");
+        
+        // ارسال لیست کاربران
+        if (userList) {
+            return sendMessage(chatId, `👥 لیست کاربران:\n\n${userList}`);
+        } else {
+            return sendMessage(chatId, "❌ هیچ کاربری ثبت نشده است.");
+        }
+    }
 
     // بررسی بازخورد
     if (users[chatId].waiting_for_feedback) {
@@ -55,7 +66,11 @@ async function handleMessage(msg) {
         await sendMessage(ADMIN_ID, `📩 **بازخورد جدید:**\n👤 **کاربر:** [${msg.from.first_name}](tg://user?id=${chatId})\n🆔 **آیدی عددی:** \`${chatId}\`\n💬 **متن:** ${text}`);
         return sendMessage(chatId, "✅ بازخورد شما دریافت شد. متشکریم!");
     }
-
+    if (text === "/admin" && chatId === ADMIN_ID) {
+        return sendMessage(chatId, "🔧 **پنل مدیریت**\nلطفاً یک گزینه را انتخاب کنید:", [
+            [{ text: "📊 آمار کاربران", callback_data: "users_count" }]
+        ]);
+    }
     if (text === "/start") {
         return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],

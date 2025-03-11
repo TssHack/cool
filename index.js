@@ -46,34 +46,13 @@ async function handleMessage(msg) {
         users[chatId] = { joinedAt: Date.now(), waiting_for_feedback: false };
         saveUsers();
     }
-    if (data === "show_user_count") {
-    // ساخت لیست کاربران با Chat ID
-    const userList = Object.keys(users).map(chatId => `Chat ID: ${chatId}`).join("\n");
 
-    // دریافت chatId از ورودی مناسب
-    const chatId = msg.chat.id;  // اگر این کد در رویداد message اجرا می‌شود
-
-    // ارسال لیست کاربران
-    if (userList) {
-        return sendMessage(chatId, `👥 لیست کاربران:\n\n${userList}`);
-    } else {
-        return sendMessage(chatId, "❌ هیچ کاربری ثبت نشده است.");
-    }
-}
-
-    // بررسی بازخورد
-    if (users[chatId].waiting_for_feedback) {
-        users[chatId].waiting_for_feedback = false;
-        saveUsers();
-
-        await sendMessage(ADMIN_ID, `📩 **بازخورد جدید:**\n👤 **کاربر:** [${msg.from.first_name}](tg://user?id=${chatId})\n🆔 **آیدی عددی:** \`${chatId}\`\n💬 **متن:** ${text}`);
-        return sendMessage(chatId, "✅ بازخورد شما دریافت شد. متشکریم!");
-    }
     if (text === "/admin" && chatId === ADMIN_ID) {
         return sendMessage(chatId, "🔧 **پنل مدیریت**\nلطفاً یک گزینه را انتخاب کنید:", [
             [{ text: "📊 آمار کاربران", callback_data: "show_user_count" }]
         ]);
     }
+
     if (text === "/start") {
         return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
@@ -91,6 +70,11 @@ async function handleCallbackQuery(query) {
     const chatId = query.message.chat.id;
     const messageId = query.message.message_id;
     const data = query.data;
+
+    if (data === "show_user_count") {
+        const userList = Object.keys(users).map(chatId => `Chat ID: ${chatId}`).join("\n");
+        return sendMessage(chatId, userList ? `👥 **لیست کاربران:**\n\n${userList}` : "❌ هیچ کاربری ثبت نشده است.");
+    }
 
     if (data === "help") {
         return editMessage(chatId, messageId, `
@@ -112,11 +96,12 @@ async function handleCallbackQuery(query) {
         return editMessage(chatId, messageId, "**کد رهگیری خود را ارسال کنید**", [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
             [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
-            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }],
+            [{ text: "بازوی صراط", url: "https://ble.ir/seratbot" }],
             [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" }]
         ]);
     }
 }
+
 
 // رهگیری مرسوله
 // تابع رهگیری مرسوله

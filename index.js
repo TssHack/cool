@@ -102,22 +102,26 @@ async function handleCallbackQuery(query) {
 
 // رهگیری مرسوله
 // تابع رهگیری مرسوله
-async function trackParcel(chatId, trackingCode, messageId) {
+async function trackPackage(chatId, trackingCode) {
+    // بررسی اینکه کد رهگیری ۲۱ رقمی باشد
     if (!/^\d{21}$/.test(trackingCode)) {
-        return editMessage(chatId, messageId, "❌ **کد رهگیری باید ۲۱ رقمی و عددی باشد.**");
+        return editMessage(chatId, "❌ **کد رهگیری باید ۲۱ رقمی و عددی باشد.**");
     }
 
+    // ارسال پیام انتظار
     const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**");
 
     try {
         const response = await axios.get(`${TIPAX_API}${trackingCode}`);
 
+        // بررسی وضعیت پاسخ API
         if (response.status !== 200) {
             return editMessage(chatId, pleaseWait.message_id, "❌ **خطا در اتصال به سرور. لطفاً دوباره تلاش کنید.**");
         }
 
         const data = response.data;
 
+        // بررسی معتبر بودن داده‌های دریافت‌شده
         if (!data.status || !data.results) {
             return editMessage(chatId, pleaseWait.message_id, "🔮 **اطلاعات مرسوله پیدا نشد.**");
         }
@@ -127,6 +131,7 @@ async function trackParcel(chatId, trackingCode, messageId) {
         const receiver = results.receiver || {};
         const statusInfo = results.status_info || [];
 
+        // ساخت پیام خروجی
         let parcelInfo = `📦 **اطلاعات مرسوله:**\n`;
         parcelInfo += `📤 **فرستنده:** ${sender.name || "نامشخص"} از ${sender.city || "نامشخص"}\n`;
         parcelInfo += `📥 **گیرنده:** ${receiver.name || "نامشخص"} در ${receiver.city || "نامشخص"}\n`;
@@ -146,9 +151,11 @@ async function trackParcel(chatId, trackingCode, messageId) {
             parcelInfo += `\n🔮 **وضعیت مرسوله در دسترس نیست.**\n`;
         }
 
+        // افزودن زمان آخرین بروزرسانی
         const lastUpdate = new Date().toLocaleString("fa-IR");
         parcelInfo += `\n🕰 **آخرین بروزرسانی:** ${lastUpdate}`;
 
+        // ارسال اطلاعات به کاربر
         return editMessage(chatId, pleaseWait.message_id, parcelInfo, [
             [{ text: "🔙 بازگشت به منو اصلی", callback_data: "main_menu" }]
         ]);

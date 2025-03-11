@@ -94,8 +94,8 @@ async function handleCallbackQuery(query) {
         return editMessage(chatId, messageId, "**کد رهگیری خود را ارسال کنید**", [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
             [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
-            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }]
-            [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" ]}
+            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }],
+            [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" }]
         ]);
     }
 }

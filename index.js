@@ -60,7 +60,7 @@ async function handleMessage(msg) {
         return sendMessage(chatId, '**سلام! 👋\nبرای پیگیری مرسوله تیپاکس، کد رهگیری را وارد کنید.\nبرای دریافت راهنما، دکمه راهنما را فشار دهید.**', [
             [{ text: "ℹ️ راهنما", callback_data: "help" }],
             [{ text: "📨 ارسال بازخورد", callback_data: "send_feedback" }],
-            [{ text: "بازوی صرات", url: "https://ble.ir/seratbot" }],
+            [{ text: "بازوی صراط", url: "https://ble.ir/seratbot" }],
             [{ text: "کانال ما", url: "https://ble.ir/shafag_tm" }]
         ]);
     }
@@ -109,7 +109,7 @@ async function trackPackage(chatId, trackingCode) {
     }
 
     // ارسال پیام انتظار
-    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**");
+    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**", [], messagid);
 
     try {
         const response = await axios.get(`${TIPAX_API}${trackingCode}`);
@@ -157,7 +157,8 @@ async function trackPackage(chatId, trackingCode) {
 
         // ارسال اطلاعات به کاربر
         return editMessage(chatId, pleaseWait.message_id, parcelInfo, [
-            [{ text: "🔙 بازگشت به منو اصلی", callback_data: "main_menu" }]
+            [{ text: "🔙 بازگشت به منو اصلی", callback_data: "main_menu" }],
+            [{ text: "ارتباط با سازنده بازو", url: "https://ble.ir/devehsan" }]
         ]);
 
     } catch (error) {

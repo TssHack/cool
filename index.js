@@ -112,7 +112,7 @@ async function trackPackage(chatId, trackingCode) {
     }
 
     // ارسال پیام انتظار
-    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**", [], messagid);
+    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**",);
 
     try {
         const response = await axios.get(`${TIPAX_API}${trackingCode}`);
@@ -138,10 +138,13 @@ async function trackPackage(chatId, trackingCode) {
         let parcelInfo = `📦 **اطلاعات مرسوله:**\n`;
         parcelInfo += `📤 **فرستنده:** ${sender.name || "نامشخص"} از ${sender.city || "نامشخص"}\n`;
         parcelInfo += `📥 **گیرنده:** ${receiver.name || "نامشخص"} در ${receiver.city || "نامشخص"}\n`;
-        parcelInfo += `💰 **هزینه پست:** ${results.package_cost || "نامشخص"} تومان\n`;
         parcelInfo += `🚚 **وزن:** ${results.weight || "نامشخص"} کیلوگرم\n`;
+        parcelinfo += `📦 **نوع بسته:** {results.get('COD', 'نامشخص')}\n`;
         parcelInfo += `💸 **هزینه کل:** ${results.total_cost || "نامشخص"} تومان\n`;
         parcelInfo += `🔄 **وضعیت پرداخت:** ${results.pay_type || "نامشخص"}\n`;
+        parcelinfo += `🌍 **مسافت:** {results.get('city_distance', 'نامشخص')} کیلومتر\n`;
+        parcelinfo += `📍 **زون:** {results.get('distance_zone', 'نامشخص')}\n`;
+        
 
         if (statusInfo.length > 0) {
             parcelInfo += `\n📝 **وضعیت مرسوله:**\n`;

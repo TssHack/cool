@@ -143,7 +143,7 @@ async function trackPackage(chatId, trackingCode) {
         parcelInfo += `💸 **هزینه کل:** ${results.total_cost || "نامشخص"} تومان\n`;
         parcelInfo += `🔄 **وضعیت پرداخت:** ${results.pay_type || "نامشخص"}\n`;
         parcelInfo += `🌍 **مسافت:** ${results.city_distance || "نامشخص"} کیلومتر\n`;
-        parcelInfo += `📍 **زون:** ${results.distance_zone || "نامشخص"}\n`;
+        parcelInfo += `📍 ** ${results.distance_zone || "نامشخص"}\n **`;
         
 
         if (statusInfo.length > 0) {

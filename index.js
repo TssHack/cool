@@ -47,16 +47,19 @@ async function handleMessage(msg) {
         saveUsers();
     }
     if (data === "show_user_count") {
-        // ساخت لیست کاربران با Chat ID
-        const userList = Object.keys(users).map(chatId => `Chat ID: ${chatId}`).join("\n");
-        
-        // ارسال لیست کاربران
-        if (userList) {
-            return sendMessage(chatId, `👥 لیست کاربران:\n\n${userList}`);
-        } else {
-            return sendMessage(chatId, "❌ هیچ کاربری ثبت نشده است.");
-        }
+    // ساخت لیست کاربران با Chat ID
+    const userList = Object.keys(users).map(chatId => `Chat ID: ${chatId}`).join("\n");
+
+    // دریافت chatId از ورودی مناسب
+    const chatId = msg.chat.id;  // اگر این کد در رویداد message اجرا می‌شود
+
+    // ارسال لیست کاربران
+    if (userList) {
+        return sendMessage(chatId, `👥 لیست کاربران:\n\n${userList}`);
+    } else {
+        return sendMessage(chatId, "❌ هیچ کاربری ثبت نشده است.");
     }
+}
 
     // بررسی بازخورد
     if (users[chatId].waiting_for_feedback) {
@@ -68,7 +71,7 @@ async function handleMessage(msg) {
     }
     if (text === "/admin" && chatId === ADMIN_ID) {
         return sendMessage(chatId, "🔧 **پنل مدیریت**\nلطفاً یک گزینه را انتخاب کنید:", [
-            [{ text: "📊 آمار کاربران", callback_data: "users_count" }]
+            [{ text: "📊 آمار کاربران", callback_data: "show_user_count" }]
         ]);
     }
     if (text === "/start") {

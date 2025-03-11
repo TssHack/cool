@@ -1,0 +1,19 @@
+[a1101326@baldr cool]$ cat users.json
+{
+  "360977394": {
+    "joinedAt": 1741688292106,
+    "waiting_for_feedback": false
+  },
+  "613370762": {
+    "joinedAt": 1741692557620,
+    "waiting_for_feedback": false
+  },
+  "2135023769": {
+    "joinedAt": 1741689014303,
+    "waiting_for_feedback": false
+  },
+  "2143480267": {
+    "joinedAt": 1741688290171,
+    "waiting_for_feedback": true
+  }
+}[a1101326@baldr cool]$

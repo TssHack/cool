@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 
 // اطلاعات ربات
-const API_URL = "https://tapi.bale.ai/bot361743011:hmO4DP2Ic7xw2QRYLhCMCmbai9KVhBmrRnKhFOA1";
+const API_URL = "https://tapi.bale.ai/bot2071296181:C1ouATv8fb7OjzcR5y8aqlwtEnxlkPrMFCtNzqGz";
 const TIPAX_API = "https://open.wiki-api.ir/apis-1/TipaxInfo?code=";
 const ADMIN_ID = 2143480267; // آیدی ادمین
 

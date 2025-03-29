@@ -110,20 +110,22 @@ async function trackPackage(chatId, trackingCode) {
     }
 
     // ارسال پیام انتظار
-    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**",);
+    const pleaseWait = await sendMessage(chatId, "⏳ **در حال بررسی...**");
 
-    try {
-        const response = await axios.get(`${TIPAX_API}${trackingCode}`);
+   try {
+        const response = await axios.get(${TIPAX_API}${trackingCode});
+
+        const response = await axios.get(API_URL);
 
         // بررسی وضعیت پاسخ API
         if (response.status !== 200) {
             return editMessage(chatId, pleaseWait.message_id, "❌ **خطا در اتصال به سرور. لطفاً دوباره تلاش کنید.**");
         }
 
-        const data = response.data;
+        const data = response.data.detail.data;
 
         // بررسی معتبر بودن داده‌های دریافت‌شده
-        if (!data.status || !data.results) {
+        if (!data || !data.results) {
             return editMessage(chatId, pleaseWait.message_id, "🔮 **اطلاعات مرسوله پیدا نشد.**");
         }
 
@@ -137,12 +139,11 @@ async function trackPackage(chatId, trackingCode) {
         parcelInfo += `📤 **فرستنده:** ${sender.name || "نامشخص"} از ${sender.city || "نامشخص"}\n`;
         parcelInfo += `📥 **گیرنده:** ${receiver.name || "نامشخص"} در ${receiver.city || "نامشخص"}\n`;
         parcelInfo += `🚚 **وزن:** ${results.weight || "نامشخص"} کیلوگرم\n`;
-         parcelInfo += `📦 **نوع بسته:** ${results.COD || "نامشخص"}\n`;
+        parcelInfo += `📦 **نوع بسته:** ${results.COD || "نامشخص"}\n`;
         parcelInfo += `💸 **هزینه کل:** ${results.total_cost || "نامشخص"} تومان\n`;
         parcelInfo += `🔄 **وضعیت پرداخت:** ${results.pay_type || "نامشخص"}\n`;
         parcelInfo += `🌍 **مسافت:** ${results.city_distance || "نامشخص"} کیلومتر\n`;
-        parcelInfo += `📍 ** ${results.distance_zone || "نامشخص"}\n **`;
-        
+        parcelInfo += `📍 **منطقه مسافتی:** ${results.distance_zone || "نامشخص"}\n`;
 
         if (statusInfo.length > 0) {
             parcelInfo += `\n📝 **وضعیت مرسوله:**\n`;
@@ -169,6 +170,7 @@ async function trackPackage(chatId, trackingCode) {
         return editMessage(chatId, pleaseWait.message_id, "❌ **خطا در دریافت اطلاعات. لطفاً بعداً تلاش کنید.**");
     }
 }
+
 
 // دریافت پیام‌ها
 async function getUpdates(offset) {

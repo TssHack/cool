@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // اطلاعات ربات
 const API_URL = "https://tapi.bale.ai/bot2071296181:C1ouATv8fb7OjzcR5y8aqlwtEnxlkPrMFCtNzqGz";
-const TIPAX_API = "https://open.wiki-api.ir/apis-1/TipaxInfo?code=";
+const TIPAX_API = "https://open.wiki-api.ir/apis-1/TipaxInfo/?key=Sl6ELFq-nUnpkAE-gCNZqJQ-2W8335T-1SAPzwG&code=";
 const ADMIN_ID = 2143480267; // آیدی ادمین
 
 // دیتابیس سبک
